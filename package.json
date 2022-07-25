@@ -1,0 +1,22 @@
+{
+  "name": "loci",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crsayen/loci.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crsayen/loci/issues"
+  },
+  "homepage": "https://github.com/crsayen/loci#readme",
+  "dependencies": {
+    "fuse.js": "^6.6.2"
+  }
+}
