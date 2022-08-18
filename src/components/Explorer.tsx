@@ -27,6 +27,7 @@ export default function Explorer() {
       audience: `${BASE_URI}/api`,
       scope: 'read:loci read:locus',
     })
+    console.log({ token })
     const result = await axios.get(
       `${BASE_URI}/api/${encodeURIComponent(page)}`,
       { headers: { authorization: `Bearer ${token}` } }
