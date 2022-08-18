@@ -2,18 +2,45 @@ import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios'
 import styles from '@/styles/Home.module.css'
+import { useEffect, useState } from 'react'
+import { Loci } from './api/lib/model'
 
-async function callApi() {
-  const result = await axios.get('http://localhost:3000/api/nerdwax')
+async function getPage(page: string): Promise<Loci> {
+  const result = await axios.get(
+    `http://localhost:3000/api/${encodeURIComponent(page)}`
+  )
   console.log(result)
   return result.data
 }
 
 async function loads() {
-  const result = await axios.get('http://localhost:3000/api/loadshit')
+  const result = await axios.get('http://localhost:3000/api/all')
+  console.log(result.data)
+  return result.data
+}
+
+async function alertStuffs(key: string) {
+  const { name, loci, description } = await getPage(key)
+  const location = loci.map((l) => {
+    const { locus, count } = l
+    return { locus, count }
+  })
+  alert(
+    `${name}\ndescription: ${description}\nlocation: ${JSON.stringify(
+      location,
+      null,
+      2
+    )}`
+  )
 }
 
 export default function Home() {
+  const [keys, setKeys] = useState<Array<string>>([])
+
+  useEffect(() => {
+    loads().then(setKeys)
+  }, [])
+
   return (
     <div className={styles.container}>
       <Head>
@@ -26,47 +53,13 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <button onClick={() => loads()}>clickMeFirst</button>
-        <button onClick={() => callApi()}>clickMe</button>
-
-        <p className={styles.description}>
-          Get started by editing{` `}
-          <code className={styles.code}>src/pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=typescript-nextjs-starter"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {keys.map((k) => {
+          return (
+            <button key={k} onClick={() => alertStuffs(k)}>
+              {k}
+            </button>
+          )
+        })}
       </main>
 
       <footer className={styles.footer}>

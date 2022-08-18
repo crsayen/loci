@@ -9,6 +9,8 @@ import {
   locusSchema,
 } from './lib/model'
 
+mongoose.Promise = global.Promise
+
 let conn: Connection | null = null
 
 export async function withData(
