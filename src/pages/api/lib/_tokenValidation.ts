@@ -26,7 +26,6 @@ export async function hasAuthority(
   req: NextApiRequest,
   ...authorities: string[]
 ) {
-  console.log('before verify')
   try {
     const decoded: { scope: string } = (await verify(
       req.headers.authorization?.substring('bearer '.length) ?? ''
