@@ -1,5 +1,6 @@
-import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken'
+import jwt, { JwtHeader, JwtPayload, SigningKeyCallback } from 'jsonwebtoken'
 import jwksClient from 'jwks-rsa'
+import { NextApiRequest } from 'next'
 
 const client = jwksClient({
   jwksUri: 'https://dev--lswpx10.us.auth0.com/.well-known/jwks.json',
@@ -11,7 +12,7 @@ function getKey(header: JwtHeader, callback: SigningKeyCallback) {
   )
 }
 
-export async function verify(token: string) {
+export async function verify(token: string): Promise<JwtPayload> {
   return new Promise((res, rej) => {
     jwt.verify(
       token,
@@ -21,10 +22,20 @@ export async function verify(token: string) {
         issuer: 'https://dev--lswpx10.us.auth0.com/',
         algorithms: ['RS256'],
       },
-      (err, decoded) => {
-        console.log(decoded)
-        res(!!err)
+      (_, decoded) => {
+        res(decoded as JwtPayload)
       }
     )
   })
+}
+
+export async function hasAuthority(
+  req: NextApiRequest,
+  ...authorities: string[]
+) {
+  const decoded = await verify(
+    req.headers.authorization?.substring('bearer '.length) ?? ''
+  )
+  console.log({ decoded })
+  return true
 }
