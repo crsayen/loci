@@ -14,18 +14,10 @@ function getKey(header: JwtHeader, callback: SigningKeyCallback) {
 
 export async function verify(token: string): Promise<JwtPayload> {
   return new Promise((res, rej) => {
-    jwt.verify(
-      token,
-      getKey,
-      {
-        audience: 'https://hazel-jade.vercel.app/api',
-        issuer: 'https://dev--lswpx10.us.auth0.com/',
-        algorithms: ['RS256'],
-      },
-      (_, decoded) => {
-        res(decoded as JwtPayload)
-      }
-    )
+    console.log('verifying token', token)
+    jwt.verify(token, getKey, (_, decoded) => {
+      res(decoded as JwtPayload)
+    })
   })
 }
 
@@ -33,6 +25,7 @@ export async function hasAuthority(
   req: NextApiRequest,
   ...authorities: string[]
 ) {
+  console.log('verifying authority')
   const decoded = await verify(
     req.headers.authorization?.substring('bearer '.length) ?? ''
   )
