@@ -4,8 +4,8 @@
 
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from './lib/model'
-import { withData } from './data'
+import { Loci } from './lib/_model'
+import { withData } from './_data'
 
 export default function handler(
   req: NextApiRequest,

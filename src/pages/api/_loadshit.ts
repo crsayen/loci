@@ -1,9 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from './lib/model'
-import { withData } from './data'
-import lociList from './lociList'
-import logger from './lib/logger'
+import { Loci } from './lib/_model'
+import { withData } from './_data'
+import lociList from './_lociList'
 
 export default function handler(
   req: NextApiRequest,
@@ -11,7 +10,7 @@ export default function handler(
 ) {
   withData(async (lociModel, _) => {
     for (const l of lociList) {
-      logger.info(`saving ${l.name}`)
+      console.log(`saving ${l.name}`)
       await lociModel.create(l)
     }
     res.status(200)

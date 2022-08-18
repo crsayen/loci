@@ -1,4 +1,4 @@
-import { Loci } from './lib/model'
+import { Loci } from './lib/_model'
 
 const lociList: Array<Loci> = [
   {

@@ -3,18 +3,18 @@ import Image from 'next/image'
 import axios from 'axios'
 import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
-import { Loci } from './api/lib/model'
+import { Loci } from './api/lib/_model'
+
+export const URI = process.env.URI ?? 'https://hazel-jade.vercel.app'
 
 async function getPage(page: string): Promise<Loci> {
-  const result = await axios.get(
-    `http://localhost:3000/api/${encodeURIComponent(page)}`
-  )
+  const result = await axios.get(`${URI}/api/${encodeURIComponent(page)}`)
   console.log(result)
   return result.data
 }
 
 async function loads() {
-  const result = await axios.get('http://localhost:3000/api/all')
+  const result = await axios.get(`${URI}/api/all`)
   console.log(result.data)
   return result.data
 }
