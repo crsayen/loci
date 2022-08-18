@@ -25,8 +25,11 @@
     ]
   },
   "dependencies": {
+    "@auth0/auth0-react": "1.10.2",
     "axios": "0.27.2",
     "dotenv": "16.0.1",
+    "jsonwebtoken": "8.5.1",
+    "jwks-rsa": "2.1.4",
     "mongoose": "6.5.2",
     "next": "12.2.3",
     "prettier": "2.7.1",
@@ -37,6 +40,7 @@
   "devDependencies": {
     "@commitlint/cli": "17.0.3",
     "@commitlint/config-conventional": "17.0.3",
+    "@types/jsonwebtoken": "8.5.8",
     "@types/node": "16.11.47",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
