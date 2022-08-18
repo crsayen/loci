@@ -1,10 +1,5 @@
-{
-  $search: 'text'
-}
-
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from './lib/_model'
+import { hasAuthority } from './lib/_tokenValidation'
 import { withData } from './_data'
 
 export default function handler(
@@ -12,6 +7,7 @@ export default function handler(
   res: NextApiResponse<Array<string>>
 ) {
   withData(async (lociModel, _) => {
+    if (!(await hasAuthority(req, 'read:loci'))) return res.status(403)
     const docs = await lociModel.find({}, { name: 1 }).orFail()
     res.status(200).json(
       docs.map((d) => {

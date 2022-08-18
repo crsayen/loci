@@ -27,9 +27,13 @@ export async function hasAuthority(
   ...authorities: string[]
 ) {
   console.log('before verify')
-  const decoded = await verify(
-    req.headers.authorization?.substring('bearer '.length) ?? ''
-  )
-  console.log('after verify')
-  return true
+  try {
+    const decoded: { scope: string } = (await verify(
+      req.headers.authorization?.substring('bearer '.length) ?? ''
+    )) as unknown as { scope: string }
+    const scope = decoded.scope.split(' ')
+    return authorities.every((a) => scope.includes(a))
+  } catch {
+    return false
+  }
 }
