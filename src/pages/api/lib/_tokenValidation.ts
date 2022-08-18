@@ -16,6 +16,7 @@ export async function verify(token: string): Promise<JwtPayload> {
   return new Promise((res, rej) => {
     console.log('verifying token', token)
     jwt.verify(token, getKey, (_, decoded) => {
+      console.log({ decoded })
       res(decoded as JwtPayload)
     })
   })
@@ -25,10 +26,10 @@ export async function hasAuthority(
   req: NextApiRequest,
   ...authorities: string[]
 ) {
-  console.log('verifying authority')
+  console.log('before verify')
   const decoded = await verify(
     req.headers.authorization?.substring('bearer '.length) ?? ''
   )
-  console.log({ decoded })
+  console.log('after verify')
   return true
 }
