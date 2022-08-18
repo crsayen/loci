@@ -9,7 +9,7 @@ export default function handler(
   res: NextApiResponse<Loci>
 ) {
   withData(async (lociModel, _) => {
-    if (!hasAuthority(req, 'read:loci')) return res.status(403)
+    if (!(await hasAuthority(req, 'read:loci'))) return res.status(403)
     const { lociName } = req.query
     const { name, description, loci } = await lociModel
       .findOne({ name: lociName })
