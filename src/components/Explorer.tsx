@@ -1,7 +1,7 @@
 import axios from 'axios'
 import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
-import { Loci } from '../pages/api/lib/_model'
+import { Loci } from '../pages/api/lib/data/models/_loci'
 import { BASE_URI } from '@/constants'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -36,23 +36,23 @@ export default function Explorer() {
   }
 
   async function alertStuffs(key: string) {
-    try {
-      const { name, loci, description } = await getPage(key)
-      const location = loci.map((l) => {
-        const { locus, count } = l
-        return { locus, count }
-      })
-      alert(
-        `${name}\ndescription: ${description}\nlocation: ${JSON.stringify(
-          location,
-          null,
-          2
-        )}`
-      )
-    } catch (e) {
-      console.log(e)
-      alert("you do not have permission to view the item's location")
-    }
+    // try {
+    //   const { name, loci, description } = await getPage(key)
+    //   const location = loci.map((l) => {
+    //     const { locus, count } = l
+    //     return { locus, count }
+    //   })
+    //   alert(
+    //     `${name}\ndescription: ${description}\nlocation: ${JSON.stringify(
+    //       location,
+    //       null,
+    //       2
+    //     )}`
+    //   )
+    // } catch (e) {
+    //   console.log(e)
+    //   alert("you do not have permission to view the item's location")
+    // }
   }
 
   useEffect(() => {

@@ -1,15 +1,18 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import axios from 'axios'
 import styles from '@/styles/Home.module.css'
 import { useAuth0 } from '@auth0/auth0-react'
 import Explorer from '@/components/Explorer'
 import LoginButton from '@/components/LoginButton'
 import LogoutButton from '@/components/LogoutButton'
-import { useRouter } from 'next/router'
+import { BASE_URI } from '@/constants'
+import axios from 'axios'
+
+async function loads() {
+  await axios.get(`${BASE_URI}/api/load`)
+}
 
 export default function Home() {
-  const { user, isAuthenticated, isLoading } = useAuth0()
+  const { user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0()
 
   if (isLoading) {
     console.log('loading...')
@@ -18,6 +21,7 @@ export default function Home() {
 
   console.log('loaded')
   console.log({ isAuthenticated })
+  getIdTokenClaims().then((c) => console.log({ c }))
   return (
     <div className={styles.container}>
       <Head>
@@ -25,6 +29,7 @@ export default function Home() {
         <meta name="description" content="Where things are" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <button onClick={() => loads()}>load stuff</button>
       {isAuthenticated && (
         <div>
           <div>

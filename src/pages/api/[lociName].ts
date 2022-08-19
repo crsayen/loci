@@ -1,18 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from './lib/_model'
+import { Loci } from './lib/data/models/_loci'
 import { hasAuthority } from './lib/_tokenValidation'
-import { withData } from './_data'
+import { withData } from './lib/data/_data'
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Loci>
 ) {
-  withData(async (lociModel, _) => {
+  withData(async (data) => {
     if (!(await hasAuthority(req, 'read:locus'))) return res.status(403).end()
-    const { lociName } = req.query
-    const { name, description, loci } = await lociModel
-      .findOne({ name: lociName })
-      .orFail()
-    res.status(200).json({ name, description, loci })
+    // const { lociName } = req.query
+    // const { name, loci } = await data.loci
+    //   .findOne({ name: lociName })
+    //   .orFail()
+    res.status(200).json({ name: 'blank', owner: 'none', items: [] })
   })
 }

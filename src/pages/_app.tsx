@@ -1,7 +1,6 @@
 import type { AppProps } from 'next/app'
 import { Auth0Provider } from '@auth0/auth0-react'
 import '@/styles/globals.css'
-import { useRouter } from 'next/router'
 import { BASE_URI } from '@/constants'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
