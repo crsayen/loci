@@ -6,9 +6,9 @@ import {
   IRoleModel,
   permissionSchema,
   roleSchema,
-} from './models/_authz'
-import { lociSchema, ILoci, ILociModel } from './models/_loci'
-import { IUser, IUserModel, userSchema } from './models/_user'
+} from '../../data/models/_authz'
+import { lociSchema, ILoci, ILociModel } from '../../data/models/_loci'
+import { IUser, IUserModel, userSchema } from '../../data/models/_user'
 
 mongoose.Promise = global.Promise
 
@@ -21,7 +21,7 @@ export type Data = {
   users: IUserModel
 }
 
-export async function withData(fn: (d: Data) => void) {
+export async function withData<T>(fn: (d: Data) => T) {
   if (conn == null) {
     const mongoUrl = process.env.MONGODB_URL ?? ''
     console.log(`Connecting to MongoDB at ${mongoUrl}`)
@@ -32,17 +32,13 @@ export async function withData(fn: (d: Data) => void) {
 
   await conn.asPromise()
   console.log('Connected to MongoDB successfully')
-  try {
-    fn({
-      loci: conn.model<ILoci, ILociModel>('Loci', lociSchema),
-      permissions: conn.model<IPermission, IPermissionModel>(
-        'Permission',
-        permissionSchema
-      ),
-      roles: conn.model<IRole, IRoleModel>('Role', roleSchema),
-      users: conn.model<IUser, IUserModel>('User', userSchema),
-    })
-  } catch (err) {
-    console.error(err)
-  }
+  return fn({
+    loci: conn.model<ILoci, ILociModel>('Loci', lociSchema),
+    permissions: conn.model<IPermission, IPermissionModel>(
+      'Permission',
+      permissionSchema
+    ),
+    roles: conn.model<IRole, IRoleModel>('Role', roleSchema),
+    users: conn.model<IUser, IUserModel>('User', userSchema),
+  })
 }

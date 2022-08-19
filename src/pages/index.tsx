@@ -7,12 +7,17 @@ import LogoutButton from '@/components/LogoutButton'
 import { BASE_URI } from '@/constants'
 import axios from 'axios'
 
-async function loads() {
-  await axios.get(`${BASE_URI}/api/load`)
-}
-
 export default function Home() {
   const { user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0()
+
+  async function loads() {
+    const claims = await getIdTokenClaims()
+    await axios.get(`${BASE_URI}/api/load`, {
+      headers: {
+        authorization: `Bearer ${claims?.__raw}`,
+      },
+    })
+  }
 
   if (isLoading) {
     console.log('loading...')
@@ -29,7 +34,6 @@ export default function Home() {
         <meta name="description" content="Where things are" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <button onClick={() => loads()}>load stuff</button>
       {isAuthenticated && (
         <div>
           <div>
