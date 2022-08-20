@@ -8,22 +8,25 @@ export interface NavListItem {
 
 interface Props {
   fetcher: () => Promise<Array<NavListItem>>
-  uri: string
 }
 
 export default function NavList(props: Props) {
   const [listItems, setListItems] = useState<Array<NavListItem>>([])
 
   useEffect(() => {
-    props.fetcher().then(setListItems)
+    console.log('fetching items')
+    props.fetcher().then((items) => {
+      console.log(items)
+      setListItems(items)
+    })
   }, [])
 
   return (
-    <div>
+    <div className="p-5 bg-black text-white">
       {listItems.map((listItem) => {
         return (
           <div key={listItem.path}>
-            <Link href={`${props.uri}/${listItem.path}`}>{listItem.text}</Link>
+            <Link href={`${listItem.path}`}>{listItem.text}</Link>
           </div>
         )
       })}
