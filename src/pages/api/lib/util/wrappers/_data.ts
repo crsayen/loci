@@ -24,14 +24,12 @@ export type Data = {
 export async function withData<T>(fn: (d: Data) => T) {
   if (conn == null) {
     const mongoUrl = process.env.MONGODB_URL ?? ''
-    console.log(`Connecting to MongoDB at ${mongoUrl}`)
     conn = mongoose.createConnection(mongoUrl, {
       serverSelectionTimeoutMS: 5000,
     })
   }
 
   await conn.asPromise()
-  console.log('Connected to MongoDB successfully')
   return fn({
     loci: conn.model<ILoci, ILociModel>('Loci', lociSchema),
     permissions: conn.model<IPermission, IPermissionModel>(

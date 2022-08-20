@@ -15,7 +15,11 @@ export default function NavList(props: Props) {
   const [listItems, setListItems] = useState<Array<NavListItem>>([])
 
   useEffect(() => {
-    props.fetcher().then(setListItems)
+    console.log('fetching items')
+    props.fetcher().then((items) => {
+      console.log(items)
+      setListItems
+    })
   }, [])
 
   return (
@@ -23,7 +27,7 @@ export default function NavList(props: Props) {
       {listItems.map((listItem) => {
         return (
           <div key={listItem.path}>
-            <Link href={`${props.uri}/${listItem.path}`}>{listItem.text}</Link>
+            <Link href={`/${listItem.path}`}>{listItem.text}</Link>
           </div>
         )
       })}

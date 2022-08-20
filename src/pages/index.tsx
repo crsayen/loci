@@ -6,6 +6,9 @@ import LoginButton from '@/components/LoginButton'
 import LogoutButton from '@/components/LogoutButton'
 import { BASE_URI } from '@/constants'
 import axios from 'axios'
+import Link from 'next/link'
+
+const TEST_USER = 'google-oauth2|103474783628012635639'
 
 export default function Home() {
   const { user, isAuthenticated, isLoading, getIdTokenClaims } = useAuth0()
@@ -20,13 +23,9 @@ export default function Home() {
   }
 
   if (isLoading) {
-    console.log('loading...')
     return <div>Loading ...</div>
   }
 
-  console.log('loaded')
-  console.log({ isAuthenticated })
-  getIdTokenClaims().then((c) => console.log({ c }))
   return (
     <div className={styles.container}>
       <Head>
@@ -42,7 +41,13 @@ export default function Home() {
             <p>{user?.email}</p>
           </div>
           <LogoutButton />
-          <Explorer />
+          <div>
+            <Link
+              href={`${BASE_URI}/${encodeURIComponent(TEST_USER)}/stache/root`}
+            >
+              <button>stache</button>
+            </Link>
+          </div>
         </div>
       )}
       {!isAuthenticated && <LoginButton />}
