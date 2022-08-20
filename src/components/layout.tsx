@@ -6,7 +6,7 @@ import LogoutButton from '@/components/header/LogoutButton'
 import { BASE_URI } from '@/constants'
 import axios from 'axios'
 import Link from 'next/link'
-import Navbar from '@/components/header/NavBar'
+import Navbar from '@/components/header/Navbar'
 
 const TEST_USER = 'google-oauth2|103474783628012635639'
 

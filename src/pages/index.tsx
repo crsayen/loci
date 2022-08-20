@@ -6,7 +6,7 @@ import LogoutButton from '@/components/header/LogoutButton'
 import { BASE_URI } from '@/constants'
 import axios from 'axios'
 import Link from 'next/link'
-import Navbar from '@/components/header/NavBar'
+import Navbar from '@/components/header/Navbar'
 import UsersPage from './users'
 import Layout from '@/components/layout'
 
