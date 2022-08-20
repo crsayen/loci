@@ -15,7 +15,7 @@ export default function ItemView(props: Props) {
   }, [])
 
   return (
-    <>
+    <div className="bg-black text-white">
       {itemData && (
         <div>
           <div>ITEM: {itemData.name}</div>
@@ -31,6 +31,6 @@ export default function ItemView(props: Props) {
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

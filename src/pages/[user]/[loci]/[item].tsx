@@ -8,6 +8,7 @@ import { NavListItem } from '@/components/Explorer'
 import NavList from '@/components/NavList'
 import ItemView from '@/components/ItemView'
 import { ItemData } from '@/pages/api/[user]/[loci]/[item]'
+import Layout from '@/components/layout'
 
 export default function ItemPage() {
   const { getIdTokenClaims } = useAuth0()
@@ -30,8 +31,8 @@ export default function ItemPage() {
   }
 
   return (
-    <>
+    <Layout>
       <ItemView fetcher={fetchItemData} />
-    </>
+    </Layout>
   )
 }

@@ -8,22 +8,22 @@ import { NavListItem } from '@/components/Explorer'
 import NavList from '@/components/NavList'
 import ItemView from '@/components/ItemView'
 import { LociRootData } from '@/pages/api/[user]/[loci]/root'
+import { LociListData } from '../api/[user]/root'
 import Layout from '@/components/layout'
 
-export default function ItemsPage() {
+export default function LociPage() {
   const { getIdTokenClaims } = useAuth0()
   const router = useRouter()
 
   console.log('router query', router.query)
 
-  const { user, loci } = router.query as {
+  const { user } = router.query as {
     user: string
-    loci: string
   }
 
   console.log('at:', router.asPath)
 
-  const lociPath = `${[user, loci].map(encodeURIComponent).join('/')}`
+  const userPath = `${[user].map(encodeURIComponent).join('/')}`
 
   async function getData<T>(url: string): Promise<T> {
     const claims = await getIdTokenClaims()
@@ -36,15 +36,15 @@ export default function ItemsPage() {
   }
 
   async function fetchItems(): Promise<Array<NavListItem>> {
-    const itemData = await getData<LociRootData>(
-      `${BASE_URI}/api/${lociPath}/root`
+    const itemData = await getData<LociListData>(
+      `${BASE_URI}/api/${userPath}/root`
     )
-    return itemData.items.map((i) => {
-      const { user, loci } = router.query as { user: string; loci: string }
-      const path = `${BASE_URI}/${[user, loci, i.name]
+    return itemData.loci.map((i) => {
+      const { user } = router.query as { user: string }
+      const path = `${BASE_URI}/${[user, i.name]
         .map(encodeURIComponent)
-        .join('/')}`
-      console.log('item path:', path)
+        .join('/')}/root`
+      console.log('loci path:', path)
       return {
         text: i.name,
         path,

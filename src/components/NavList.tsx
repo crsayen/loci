@@ -22,7 +22,7 @@ export default function NavList(props: Props) {
   }, [])
 
   return (
-    <div>
+    <div className="p-5 bg-black text-white">
       {listItems.map((listItem) => {
         return (
           <div key={listItem.path}>
