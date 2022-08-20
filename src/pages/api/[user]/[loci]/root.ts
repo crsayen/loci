@@ -22,7 +22,7 @@ export default function handleRoot(
       const doc = await data.loci.findOne({ owner: user, loci }).exec()
       if (doc == null)
         throw new NotFound(`Loci '${loci}' not found for user '${user}'`)
-      res.status(200).json({
+      return res.status(200).json({
         name: loci as string,
         owner: user as string,
         items: doc.items.map((i) => {

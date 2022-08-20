@@ -13,17 +13,7 @@ export default function ItemPage() {
   const { getIdTokenClaims } = useAuth0()
   const router = useRouter()
 
-  console.log('router query', router.query)
-
-  const { user, loci, item } = router.query as {
-    user: string
-    loci: string
-    item: string
-  }
-
-  const lociPath = `${[user, loci, item]
-    .map((c) => encodeURIComponent(c))
-    .join('/')}`
+  console.log('at:', router.asPath)
 
   async function getData<T>(url: string): Promise<T> {
     const claims = await getIdTokenClaims()
@@ -36,7 +26,7 @@ export default function ItemPage() {
   }
 
   async function fetchItemData(): Promise<ItemData> {
-    return getData<ItemData>(`${BASE_URI}/api/${lociPath}`)
+    return getData<ItemData>(`${BASE_URI}/api/${router.asPath}`)
   }
 
   return (

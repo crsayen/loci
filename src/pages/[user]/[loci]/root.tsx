@@ -20,6 +20,8 @@ export default function ItemsPage() {
     loci: string
   }
 
+  console.log('at:', router.asPath)
+
   const lociPath = `${[user, loci].map(encodeURIComponent).join('/')}`
 
   async function getData<T>(url: string): Promise<T> {
@@ -37,16 +39,21 @@ export default function ItemsPage() {
       `${BASE_URI}/api/${lociPath}/root`
     )
     return itemData.items.map((i) => {
+      const { user, loci } = router.query as { user: string; loci: string }
+      const path = `${BASE_URI}/${[user, loci, i.name]
+        .map(encodeURIComponent)
+        .join('/')}`
+      console.log('item path:', path)
       return {
         text: i.name,
-        path: `${i.path}`,
+        path,
       }
     })
   }
 
   return (
     <div>
-      <NavList fetcher={fetchItems} uri={`${BASE_URI}/`} />
+      <NavList fetcher={fetchItems} />
     </div>
   )
 }

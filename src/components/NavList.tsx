@@ -8,7 +8,6 @@ export interface NavListItem {
 
 interface Props {
   fetcher: () => Promise<Array<NavListItem>>
-  uri: string
 }
 
 export default function NavList(props: Props) {
@@ -18,7 +17,7 @@ export default function NavList(props: Props) {
     console.log('fetching items')
     props.fetcher().then((items) => {
       console.log(items)
-      setListItems
+      setListItems(items)
     })
   }, [])
 
@@ -27,7 +26,7 @@ export default function NavList(props: Props) {
       {listItems.map((listItem) => {
         return (
           <div key={listItem.path}>
-            <Link href={`/${listItem.path}`}>{listItem.text}</Link>
+            <Link href={`${listItem.path}`}>{listItem.text}</Link>
           </div>
         )
       })}
