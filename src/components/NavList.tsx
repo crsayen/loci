@@ -36,10 +36,12 @@ export default function NavList(props: Props) {
     <div>
       <div className="py-5 bg-black text-white w-full">
         <Loading loading={isLoading}></Loading>
-        <Search
-          items={listItems.map((i) => i.text)}
-          onSelect={handleSelect}
-        ></Search>
+        {listItems.length > 10 && (
+          <Search
+            items={listItems.map((i) => i.text)}
+            onSelect={handleSelect}
+          ></Search>
+        )}
         {listItems.map((listItem) => {
           return (
             <div>
