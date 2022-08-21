@@ -2,12 +2,14 @@ import { Model, Schema, Document } from 'mongoose'
 
 export type User = {
   id: string
+  nickname: string
   roles: Array<string>
   loci: Array<string>
 }
 
 export interface IUser extends Document {
   id: string
+  nickname: string
   roles: Array<string>
   loci: Array<string>
 }
