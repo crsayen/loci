@@ -14,7 +14,7 @@ export default function Layout(props: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div className="p-5 pt-5 layout-content  w-full overflow-y-scroll">
+      <div className="px-5 layout-content  w-full overflow-y-scroll">
         {props.children}
       </div>
     </div>
