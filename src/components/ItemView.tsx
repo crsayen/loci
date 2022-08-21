@@ -13,12 +13,12 @@ export default function ItemView(props: Props) {
 
   useEffect(() => {
     console.log('fetching itemciew')
-    props.fetcher().then(() => {
-      setItemData
+    props.fetcher().then((d) => {
+      setItemData(d)
       setIsLoading(false)
     })
   }, [])
-
+  console.log(itemData)
   return (
     <div className="bg-black text-white">
       <Loading loading={isLoading}></Loading>
