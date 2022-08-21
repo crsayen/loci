@@ -1,6 +1,8 @@
 import { Role } from './pages/api/lib/data/models/_authz'
 
-const environment = (process.env.ENVIRONMENT ?? 'prod').toUpperCase()
+const environment = (
+  process.env.NEXT_PUBLIC_ENVIRONMENT ?? 'local'
+).toUpperCase()
 if (!['LOCAL', 'DEV', 'PROD'].includes(environment)) {
   console.log('invalid ENVIRONMENT:', environment)
   process.exit(-1)
