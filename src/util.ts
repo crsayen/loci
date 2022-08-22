@@ -13,25 +13,25 @@ export async function getIdBearerToken(
 
 export async function get(
   url: string,
-  getIdTokenClaims: (
+  getIdTokenClaims?: (
     options?: GetIdTokenClaimsOptions | undefined
   ) => Promise<IdToken | undefined>,
-  query?: { [k: string]: string }
+  params?: { [k: string]: string }
 ): Promise<void> {
-  getData(url, getIdTokenClaims, query)
+  getData(url, getIdTokenClaims, params)
 }
 
 export async function getData<T>(
   url: string,
-  getIdTokenClaims: (
+  getIdTokenClaims?: (
     options?: GetIdTokenClaimsOptions | undefined
   ) => Promise<IdToken | undefined>,
-  query?: { [k: string]: string }
+  params?: { [k: string]: string }
 ): Promise<T> {
-  const authorization = await getIdBearerToken(getIdTokenClaims)
-  const result = await axios.get(url, {
-    headers: { authorization },
-    params: query,
-  })
+  let headers
+  if (getIdTokenClaims != undefined) {
+    headers = { authorization: await getIdBearerToken(getIdTokenClaims) }
+  }
+  const result = await axios.get(url, { headers, params })
   return result.data as T
 }

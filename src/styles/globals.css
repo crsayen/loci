@@ -35,3 +35,20 @@ body {
 .layout-content {
   height: calc(100vh - 4rem);
 }
+
+.header {
+  grid-area: header;
+}
+
+.main {
+  grid-area: main
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 50px auto;
+  grid-template-areas:
+  "header"
+  "main"
+}

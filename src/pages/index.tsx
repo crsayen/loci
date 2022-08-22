@@ -44,17 +44,7 @@ export default function Home() {
   return (
     <Layout>
       <Loading loading={showLoading} />
-      {isAuthenticated ? (
-        <>
-          {userRegistered ? (
-            <UsersPage />
-          ) : (
-            <NickName setUserRegistered={setUserRegistered} />
-          )}
-        </>
-      ) : (
-        <>log in to do stuff</>
-      )}
+      <UsersPage />
     </Layout>
   )
 }

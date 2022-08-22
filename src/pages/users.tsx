@@ -14,10 +14,9 @@ export default function UsersPage() {
       getIdTokenClaims
     )
     return itemData.users.map((i) => {
-      const path = `${BASE_URI}/${encodeURIComponent(i)}/root`
-      console.log('user path:', path)
+      const path = `${BASE_URI}/${encodeURIComponent(i.id)}/root`
       return {
-        text: i,
+        text: i.nickname,
         path,
       }
     })

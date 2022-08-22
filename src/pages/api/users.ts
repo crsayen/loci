@@ -6,7 +6,7 @@ import { withErrorHandler } from './lib/util/wrappers/_handler'
 import { hasAuthority } from './lib/util/wrappers/_tokenValidation'
 
 export interface UserListData {
-  users: Array<string>
+  users: Array<{ id: string; nickname: string }>
 }
 
 export default function handleRoot(
@@ -15,14 +15,13 @@ export default function handleRoot(
 ) {
   withErrorHandler(res, () => {
     withData(async (data) => {
-      const doc = await data.users.find({}, { id: 1 }).exec()
-      console.log(
-        'users',
-        doc.map((u) => u.id)
-      )
-      return res.status(200).json({
-        users: doc.map((i) => i.id),
+      const doc = await data.users.find().select('id nickname').exec()
+      const users = doc.map((i) => {
+        return { id: i.id, nickname: i.nickname }
       })
+      console.log(doc[0].nickname)
+      console.log(users)
+      return res.status(200).json({ users })
     })
   })
 }
