@@ -30,7 +30,7 @@ export async function withData<T>(fn: (d: Data) => T) {
   }
 
   await conn.asPromise()
-  return fn({
+  return await fn({
     loci: conn.model<ILoci, ILociModel>('Loci', lociSchema),
     permissions: conn.model<IPermission, IPermissionModel>(
       'Permission',

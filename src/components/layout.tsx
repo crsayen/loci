@@ -6,6 +6,7 @@ import axios from 'axios'
 import Head from 'next/head'
 import { ReactNode, useEffect, useState } from 'react'
 import Loading from './Loading'
+import { useLoading } from './LoadingContext'
 import NickName from './NickName'
 
 export const USER_REGISTRATION_URL = `${BASE_URI}/api/register`
@@ -15,9 +16,17 @@ type Props = {
 }
 
 export default function Layout(props: Props) {
-  const { isAuthenticated, getIdTokenClaims, isLoading } = useAuth0()
-  const [userRegistered, setUserRegistered] = useState<boolean | null>(false)
-  const [showLoading, setShowLoading] = useState<boolean>(false)
+  const {
+    isAuthenticated,
+    getIdTokenClaims,
+    isLoading: authIsLoading,
+  } = useAuth0()
+  const [userRegistered, setUserRegistered] = useState<boolean | null>(null)
+  const { loading, setLoading } = useLoading()
+
+  useEffect(() => {
+    setLoading(authIsLoading || userRegistered == null)
+  }, [authIsLoading, userRegistered])
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -38,25 +47,19 @@ export default function Layout(props: Props) {
     })
   }, [isAuthenticated])
 
-  useEffect(() => {
-    console.log({ isLoading, userRegistered })
-    console.log('we should show loading:', isLoading || userRegistered == null)
-    setShowLoading(isLoading || userRegistered == null)
-  }, [isLoading, userRegistered])
-
   return (
-    <div className="flex-col w-full h-screen bg-black">
+    <div className="layout bg-black">
       <Head>
         <title>Loci</title>
         <meta name="description" content="Where things are" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div className="pt-2 px-5 layout-content w-full">
-        <Loading loading={showLoading} />
+      <div className="px-5 main w-full overflow-y-scroll">
+        <Loading loading={loading} />
         {isAuthenticated ? (
           <>
-            {userRegistered ? (
+            {userRegistered ?? true ? (
               props.children
             ) : (
               <NickName setUserRegistered={setUserRegistered} />

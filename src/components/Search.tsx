@@ -1,14 +1,6 @@
-import { useEffect, useState } from 'react'
-import {
-  CheckIcon,
-  ExclamationCircleIcon,
-  SelectorIcon,
-} from '@heroicons/react/solid'
-import { get, getIdBearerToken } from '@/util'
-import { useAuth0 } from '@auth0/auth0-react'
-import axios from 'axios'
-import { USER_REGISTRATION_URL } from '@/pages'
 import { Combobox } from '@headlessui/react'
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
+import { useState } from 'react'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')

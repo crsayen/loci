@@ -13,8 +13,8 @@ export default function handleRoot(
   req: NextApiRequest,
   res: NextApiResponse<UserListData>
 ) {
-  withErrorHandler(res, () => {
-    withData(async (data) => {
+  return withErrorHandler(res, () => {
+    return withData(async (data) => {
       const doc = await data.users.find().select('id nickname').exec()
       const users = doc.map((i) => {
         return { id: i.id, nickname: i.nickname }

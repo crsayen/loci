@@ -11,11 +11,11 @@ const Button = (props: Props) => {
     <button
       onClick={props.onClick}
       disabled={props.disabled}
-      className="w-full inline-flex items-center justify-center px-4 py-2 
-              border border-neutral-600 shadow-sm font-medium rounded-md text-white 
+      className="inline-flex items-center justify-center px-3 py-2 
+              border border-neutral-600 shadow-sm font-medium rounded-md
               bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 
               focus:ring-offset-2 focus:ring-neutral-500 sm:mt-0 sm:ml-3 sm:w-auto 
-              sm:text-sm disabled:text-neutral-700 disabled:hover:bg-neutral-900"
+              md:text-s text-xs disabled:text-neutral-700 disabled:hover:bg-neutral-900"
     >
       {props.children}
     </button>

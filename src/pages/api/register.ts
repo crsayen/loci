@@ -11,8 +11,8 @@ export interface UserListData {
 }
 
 export default function handle(req: NextApiRequest, res: NextApiResponse) {
-  withErrorHandler(res, () => {
-    withData(async (data) => {
+  return withErrorHandler(res, () => {
+    return withData(async (data) => {
       const { nickname } = req.query as { nickname: string | undefined }
       const { sub } = await verify(
         req.headers?.authorization?.substring('bearer '.length) ?? ''

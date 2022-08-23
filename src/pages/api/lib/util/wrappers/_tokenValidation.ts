@@ -55,5 +55,5 @@ export async function withAuth(
 ) {
   const token = req.headers.authorization?.substring('bearer '.length) ?? ''
   await hasAuthority(token, authorities)
-  return fn()
+  return await fn()
 }

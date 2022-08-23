@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body {
     background: black;
     color: white;
@@ -40,15 +47,29 @@ body {
   grid-area: header;
 }
 
+.red {
+  border: 1px red  solid;
+}
+
+.green {
+  border: 1px green  solid;
+}
+
 .main {
-  grid-area: main
+  grid-area: main;
+  max-width: 80rem;
 }
 
 .layout {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: 10px auto 10px;
   grid-template-rows: 50px auto;
   grid-template-areas:
-  "header"
-  "main"
+  "header header header"
+  "left main right"
 }

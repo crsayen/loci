@@ -27,11 +27,16 @@ export async function getData<T>(
     options?: GetIdTokenClaimsOptions | undefined
   ) => Promise<IdToken | undefined>,
   params?: { [k: string]: string }
-): Promise<T> {
-  let headers
-  if (getIdTokenClaims != undefined) {
-    headers = { authorization: await getIdBearerToken(getIdTokenClaims) }
+): Promise<T | null> {
+  try {
+    let headers
+    if (getIdTokenClaims != undefined) {
+      headers = { authorization: await getIdBearerToken(getIdTokenClaims) }
+    }
+    const result = await axios.get(url, { headers, params })
+    return result.data as T
+  } catch (e) {
+    console.error(e)
+    return null
   }
-  const result = await axios.get(url, { headers, params })
-  return result.data as T
 }

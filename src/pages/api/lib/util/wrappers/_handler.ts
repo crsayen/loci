@@ -10,6 +10,6 @@ export async function withErrorHandler<T>(res: NextApiResponse, fn: () => T) {
     const info = [status, message, cause.name, cause.message]
       .filter((s) => !!s)
       .join(' : ')
-    res.status(status).json({ message, info })
+    return Promise.resolve(res.status(status).json({ message, info }))
   }
 }

@@ -17,7 +17,7 @@ export default function handleItem(
   req: NextApiRequest,
   res: NextApiResponse<ItemData>
 ) {
-  withErrorHandler(res, () => {
+  return withErrorHandler(res, () => {
     withData(async (data) => {
       const { user, loci, item } = req.query
       console.log({ user, loci, item })

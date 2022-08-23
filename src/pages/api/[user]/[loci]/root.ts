@@ -15,7 +15,7 @@ export default function handleRoot(
   req: NextApiRequest,
   res: NextApiResponse<LociRootData>
 ) {
-  withErrorHandler(res, () => {
+  return withErrorHandler(res, () => {
     withData(async (data) => {
       const { user, loci } = req.query
       console.log({ user, loci })

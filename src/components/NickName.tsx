@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
-import { ExclamationCircleIcon } from '@heroicons/react/solid'
-import { get, getIdBearerToken } from '@/util'
+import { get } from '@/util'
 import { useAuth0 } from '@auth0/auth0-react'
-import axios from 'axios'
-import { USER_REGISTRATION_URL } from '@/pages'
+import { ExclamationCircleIcon } from '@heroicons/react/solid'
+import { useEffect, useState } from 'react'
+import { USER_REGISTRATION_URL } from './Layout'
+import Button from './primitive/Button'
 
 export default function NickName(props: {
   setUserRegistered: (v: boolean) => void
@@ -78,17 +78,11 @@ export default function NickName(props: {
               </p>
             </div>
 
-            <button
-              onClick={handleSubmit}
-              disabled={!!isInvalid}
-              className="mt-3 mb-4 w-full inline-flex items-center justify-center px-4 py-2 
-              border border-neutral-600 shadow-sm font-medium rounded-md text-white 
-              bg-neutral-900 hover:bg-neutral-800 focus:outline-none focus:ring-2 
-              focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto 
-              sm:text-sm disabled:text-neutral-700 disabled:hover:bg-neutral-900"
-            >
-              Save
-            </button>
+            <div className="mt-3 mb-4">
+              <Button onClick={handleSubmit} disabled={!!isInvalid}>
+                Save
+              </Button>
+            </div>
           </div>
         </div>
       </div>

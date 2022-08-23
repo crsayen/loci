@@ -14,8 +14,8 @@ export default function handleRoot(
   req: NextApiRequest,
   res: NextApiResponse<LociListData>
 ) {
-  withErrorHandler(res, () => {
-    withData(async (data) => {
+  return withErrorHandler(res, () => {
+    return withData(async (data) => {
       const { user } = req.query as { user: string }
       console.log({ user })
       const doc = await data.users.findOne({ id: user }).exec()
