@@ -59,10 +59,7 @@ export default function ItemsPage() {
 
   return (
     <Layout>
-      <AddItemModal
-        open={addItemModalOpen}
-        onClose={() => setAddItemModalOpen(false)}
-      />
+      <AddItemModal open={true} onClose={() => setAddItemModalOpen(false)} />
       <div className="absolute mx-auto py-2 z-10 flex flex-row items-end gap-5 justify-start bg-black w-full pr-auto">
         <div>
           {canEdit && (

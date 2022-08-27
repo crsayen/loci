@@ -1,6 +1,6 @@
 import { Combobox } from '@headlessui/react'
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -31,8 +31,10 @@ export default function Search(props: {
       <div className="relative mt-1">
         <Combobox.Input
           className="w-full rounded-md border border-neutral-600 bg-neutral-900 py-2 pl-3 pr-10 shadow-sm focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 sm:text-sm"
-          onChange={(event) => setQuery(event.target.value)}
-          displayValue={(item) => item as string}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setQuery(event.target.value)
+          }
+          displayValue={(item: string) => item as string}
         />
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <SelectorIcon className="h-5 w-5 " aria-hidden="true" />

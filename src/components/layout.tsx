@@ -21,7 +21,7 @@ export default function Layout(props: Props) {
     getIdTokenClaims,
     isLoading: authIsLoading,
   } = useAuth0()
-  const [userRegistered, setUserRegistered] = useState<boolean | null>(null)
+  const [userRegistered, setUserRegistered] = useState<boolean | null>(false)
   const { loading, setLoading } = useLoading()
 
   useEffect(() => {
