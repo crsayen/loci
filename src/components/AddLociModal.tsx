@@ -26,11 +26,11 @@ export default function AddItemModal(props: Props) {
   const [name, setName] = useState<string>('')
 
   const handleSave = async () => {
-    const path = `${[router.query.user]
+    const path = `${['users', router.query.user, 'collections']
       //@ts-ignore
       .map(encodeURIComponent)
       .join('/')}`
-    await post<{ name: string }, any>(`${BASE_URI}/api/${path}/root`, { name }, getIdTokenClaims)
+    await post<{ name: string }, any>(`${BASE_URI}/api/${path}`, { name }, getIdTokenClaims)
     props.onClose()
   }
 

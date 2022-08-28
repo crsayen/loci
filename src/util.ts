@@ -1,5 +1,6 @@
 import { GetIdTokenClaimsOptions, IdToken } from '@auth0/auth0-react'
 import axios from 'axios'
+import { BASE_URI } from './constants'
 
 export async function getIdBearerToken(
   getIdTokenClaims: (options?: GetIdTokenClaimsOptions | undefined) => Promise<IdToken | undefined>
@@ -70,4 +71,27 @@ export async function httpDelete(
     console.error(e)
     return false
   }
+}
+
+export async function getUserGrants(id: string): Promise<Array<string>> {
+  const result = await getData<{ grants: Array<string> }>(`${BASE_URI}/api/users/${encodeURIComponent(id)}/grants`)
+  console.log('grants', result?.grants)
+  return result?.grants ?? []
+}
+
+interface Options {
+  orIsUser?: string
+}
+
+export async function hasAuthority(
+  authorities: Array<string>,
+  getIdTokenClaims: (options?: GetIdTokenClaimsOptions | undefined) => Promise<IdToken | undefined>,
+  options?: Options
+) {
+  console.log('checking authorities')
+  const { sub } = (await getIdTokenClaims()) as IdToken
+  console.log('sub', sub)
+  if (options?.orIsUser == sub) return true
+  const grants = await getUserGrants(sub)
+  return authorities.every((a) => grants.includes(a))
 }

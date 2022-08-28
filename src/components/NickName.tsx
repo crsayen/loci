@@ -1,8 +1,8 @@
-import { get } from '@/util'
-import { useAuth0 } from '@auth0/auth0-react'
+import { BASE_URI } from '@/constants'
+import { get, post } from '@/util'
+import { IdToken, useAuth0 } from '@auth0/auth0-react'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
-import { USER_REGISTRATION_URL } from './Layout'
 import Button from './primitive/Button'
 
 export default function NickName(props: { setUserRegistered: (v: boolean) => void }) {
@@ -24,8 +24,9 @@ export default function NickName(props: { setUserRegistered: (v: boolean) => voi
   }
 
   const handleSubmit = async () => {
+    const { sub } = (await getIdTokenClaims()) as IdToken
     try {
-      await get(USER_REGISTRATION_URL, getIdTokenClaims, { nickname })
+      await post(`${BASE_URI}/api/users/${encodeURIComponent(sub)}`, { nickname }, getIdTokenClaims)
       props.setUserRegistered(true)
     } catch (e) {
       console.error(e)

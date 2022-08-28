@@ -27,9 +27,14 @@ export async function verify(token: string): Promise<JwtPayload> {
   }
 }
 
-export async function hasAuthority(token: string, authorities: Array<string>): Promise<void> {
+export async function hasAuthority(
+  token: string,
+  authorities: Array<string>,
+  options?: WithAuthOptions
+): Promise<void> {
   return withData(async (data) => {
     const { sub } = (await verify(token ?? '')) as unknown as { sub: string }
+    if (options?.orIsUser == sub) return
     const user = await data.users
       .findOne({ id: sub }, { roles: 1 })
       .orFail()
@@ -44,8 +49,18 @@ export async function hasAuthority(token: string, authorities: Array<string>): P
   })
 }
 
-export async function withAuth(req: NextApiRequest, _: NextApiResponse, authorities: Array<string>, fn: () => void) {
+export interface WithAuthOptions {
+  orIsUser?: string
+}
+
+export async function withAuth(
+  req: NextApiRequest,
+  _: NextApiResponse,
+  authorities: Array<string>,
+  fn: () => void,
+  options?: WithAuthOptions
+) {
   const token = req.headers.authorization?.substring('bearer '.length) ?? ''
-  await hasAuthority(token, authorities)
+  await hasAuthority(token, authorities, options)
   return await fn()
 }

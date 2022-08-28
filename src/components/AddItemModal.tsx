@@ -65,11 +65,11 @@ export default function AddItemModal(props: Props) {
         }
       })
 
-    const path = `${[router.query.user, router.query.loci]
+    const path = `${['users', router.query.user, 'collections', router.query.loci, 'items']
       //@ts-ignore
       .map(encodeURIComponent)
       .join('/')}`
-    await post<Array<Item>, any>(`${BASE_URI}/api/${path}/root`, loci, getIdTokenClaims)
+    await post<Array<Item>, any>(`${BASE_URI}/api/${path}`, loci, getIdTokenClaims)
     props.onClose()
   }
   console.log(inputStyle('1/2'))
