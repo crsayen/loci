@@ -1,5 +1,4 @@
-import { Model, Schema, Document } from 'mongoose'
-import { IUser } from './_user'
+import { Document, Model, Schema } from 'mongoose'
 
 export type Locus = {
   locus: string

@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from '../../../lib/data/models/_loci'
 import { BadRequest } from '../../../lib/exceptions/BadRequest'
 import { InternalServerError } from '../../../lib/exceptions/InternalServerError'
 import { MethodNotAllowed } from '../../../lib/exceptions/MethodNotAllowed'
 import { NotFound } from '../../../lib/exceptions/NotFound'
 import { Data, withData } from '../../../lib/util/wrappers/_data'
 import { withErrorHandler } from '../../../lib/util/wrappers/_handler'
-import { hasAuthority, withAuth } from '../../../lib/util/wrappers/_tokenValidation'
+import { withAuth } from '../../../lib/util/wrappers/_tokenValidation'
 
 /*
   /users/:user/collections

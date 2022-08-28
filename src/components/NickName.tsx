@@ -1,5 +1,5 @@
 import { BASE_URI } from '@/constants'
-import { get, post } from '@/util'
+import { post } from '@/util'
 import { IdToken, useAuth0 } from '@auth0/auth0-react'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'

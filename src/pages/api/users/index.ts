@@ -1,9 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from '../lib/data/models/_loci'
-import { NotFound } from '../lib/exceptions/NotFound'
 import { withData } from '../lib/util/wrappers/_data'
 import { withErrorHandler } from '../lib/util/wrappers/_handler'
-import { hasAuthority } from '../lib/util/wrappers/_tokenValidation'
 
 /*
   /users

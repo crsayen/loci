@@ -1,13 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { Loci } from '../../lib/data/models/_loci'
-import { BadRequest } from '../../lib/exceptions/BadRequest'
-import { InternalServerError } from '../../lib/exceptions/InternalServerError'
+import { User } from '../../lib/data/models/_user'
 import { MethodNotAllowed } from '../../lib/exceptions/MethodNotAllowed'
 import { NotFound } from '../../lib/exceptions/NotFound'
 import { Data, withData } from '../../lib/util/wrappers/_data'
 import { withErrorHandler } from '../../lib/util/wrappers/_handler'
-import { hasAuthority, verify, withAuth } from '../../lib/util/wrappers/_tokenValidation'
-import { IUser, User } from '../../lib/data/models/_user'
+import { withAuth } from '../../lib/util/wrappers/_tokenValidation'
 
 /*
   /users/:user/grants
