@@ -1,8 +1,8 @@
 import type { AppProps } from 'next/app'
 import { Auth0Provider } from '@auth0/auth0-react'
-import '@/styles/globals.css'
-import { BASE_URI } from '@/constants'
-import { LoadingProvider } from '@/components/LoadingContext'
+import '../styles/globals.css'
+import { BASE_URI } from '../constants'
+import { LoadingProvider } from '../components/LoadingContext'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (

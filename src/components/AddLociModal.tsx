@@ -1,5 +1,5 @@
-import { BASE_URI } from '@/constants'
-import { post } from '@/util'
+import { BASE_URI } from '../constants'
+import { post } from '../util'
 import { useAuth0 } from '@auth0/auth0-react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useRouter } from 'next/router'

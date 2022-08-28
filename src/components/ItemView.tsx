@@ -1,4 +1,4 @@
-import { ItemData } from '@/pages/api/users/[user]/collections/[loci]/items/[item]'
+import { ItemData } from '../pages/api/users/[user]/collections/[loci]/items/[item]'
 
 interface Props {
   itemData: ItemData | null
