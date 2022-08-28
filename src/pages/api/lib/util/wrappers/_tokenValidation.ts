@@ -27,10 +27,7 @@ export async function verify(token: string): Promise<JwtPayload> {
   }
 }
 
-export async function hasAuthority(
-  token: string,
-  authorities: Array<string>
-): Promise<void> {
+export async function hasAuthority(token: string, authorities: Array<string>): Promise<void> {
   return withData(async (data) => {
     const { sub } = (await verify(token ?? '')) as unknown as { sub: string }
     const user = await data.users
@@ -40,19 +37,14 @@ export async function hasAuthority(
         throw new Forbidden('Unrecognized user')
       })
     const roles = await data.roles.find({ name: { $in: user.roles } })
-    const permissions = roles.flatMap((r) => r.permissions)
+    const permissions = [...roles.flatMap((r) => r.permissions), sub]
     if (!authorities.every((a) => permissions.includes(a))) {
       throw new Forbidden('User lacks the required permission(s)')
     }
   })
 }
 
-export async function withAuth(
-  req: NextApiRequest,
-  _: NextApiResponse,
-  authorities: Array<string>,
-  fn: () => void
-) {
+export async function withAuth(req: NextApiRequest, _: NextApiResponse, authorities: Array<string>, fn: () => void) {
   const token = req.headers.authorization?.substring('bearer '.length) ?? ''
   await hasAuthority(token, authorities)
   return await fn()

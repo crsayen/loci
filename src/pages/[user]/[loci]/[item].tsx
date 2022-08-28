@@ -9,18 +9,13 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 export default function ItemPage() {
-  const { getIdTokenClaims } = useAuth0()
+  const { getIdTokenClaims, isAuthenticated } = useAuth0()
   const { setLoading } = useLoading()
   const [itemData, setItemData] = useState<ItemData | null>(null)
   const router = useRouter()
 
-  console.log('at:', router.asPath)
-
   async function fetchItemData(): Promise<ItemData | null> {
-    return getData<ItemData>(
-      `${BASE_URI}/api/${router.asPath}`,
-      getIdTokenClaims
-    )
+    return getData<ItemData>(`${BASE_URI}/api/${router.asPath}`, getIdTokenClaims)
   }
 
   useEffect(() => {
@@ -29,7 +24,7 @@ export default function ItemPage() {
       setItemData(item)
       setLoading(false)
     })
-  }, [])
+  }, [isAuthenticated])
 
   return (
     <Layout>

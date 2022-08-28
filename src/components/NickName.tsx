@@ -1,13 +1,11 @@
 import { get } from '@/util'
 import { useAuth0 } from '@auth0/auth0-react'
-import { ExclamationCircleIcon } from '@heroicons/react/solid'
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
 import { USER_REGISTRATION_URL } from './Layout'
 import Button from './primitive/Button'
 
-export default function NickName(props: {
-  setUserRegistered: (v: boolean) => void
-}) {
+export default function NickName(props: { setUserRegistered: (v: boolean) => void }) {
   const { getIdTokenClaims } = useAuth0()
   const [nickname, setNickname] = useState<string>('')
   const [isInvalid, setIsInvalid] = useState<boolean | null>(null)
@@ -22,7 +20,6 @@ export default function NickName(props: {
     const n = e.target.value
     setNickname(n)
     const valid = validate(n)
-    console.log({ valid })
     setIsInvalid(!valid)
   }
 
@@ -62,18 +59,10 @@ export default function NickName(props: {
                   aria-describedby="invalid-nickname"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                  {showValidationError && (
-                    <ExclamationCircleIcon
-                      className="h-5 w-5 text-red-500"
-                      aria-hidden="true"
-                    />
-                  )}
+                  {showValidationError && <ExclamationCircleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />}
                 </div>
               </div>
-              <p
-                className="mt-2 h-3 text-sm text-red-600"
-                id="invalid-nickname"
-              >
+              <p className="mt-2 h-3 text-sm text-red-600" id="invalid-nickname">
                 {showValidationError ? '1-20 Letters and numbers only.' : ''}
               </p>
             </div>

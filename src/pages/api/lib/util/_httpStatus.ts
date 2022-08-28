@@ -1,4 +1,4 @@
-export type HttpStatusCode = 200 | 400 | 401 | 403 | 404 | 500
+export type HttpStatusCode = 200 | 400 | 401 | 403 | 404 | 405 | 500
 
 export const httpStatus: Record<string, HttpStatusCode> = {
   OK: 200,
@@ -6,5 +6,6 @@ export const httpStatus: Record<string, HttpStatusCode> = {
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
+  METHOD_NOT_ALLOWED: 405,
   INTERNAL_SERVER_ERROR: 500,
 }

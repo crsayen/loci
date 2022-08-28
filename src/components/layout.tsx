@@ -16,11 +16,7 @@ type Props = {
 }
 
 export default function Layout(props: Props) {
-  const {
-    isAuthenticated,
-    getIdTokenClaims,
-    isLoading: authIsLoading,
-  } = useAuth0()
+  const { isAuthenticated, getIdTokenClaims, isLoading: authIsLoading } = useAuth0()
   const [userRegistered, setUserRegistered] = useState<boolean | null>(false)
   const { loading, setLoading } = useLoading()
 
@@ -32,7 +28,6 @@ export default function Layout(props: Props) {
     if (!isAuthenticated) return
     setUserRegistered(null)
     getIdBearerToken(getIdTokenClaims).then((token) => {
-      console.log({ token })
       axios
         .get(USER_REGISTRATION_URL, { headers: { authorization: token } })
         .then(() => setUserRegistered(true))
@@ -55,18 +50,26 @@ export default function Layout(props: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar />
-      <div className="px-5 main w-full overflow-y-scroll">
+      <div className="px-1 main w-full overflow-y-scroll mx-auto">
         <Loading loading={loading} />
         {isAuthenticated ? (
-          <>
-            {userRegistered ?? true ? (
-              props.children
-            ) : (
-              <NickName setUserRegistered={setUserRegistered} />
-            )}
-          </>
+          <>{userRegistered ?? true ? props.children : <NickName setUserRegistered={setUserRegistered} />}</>
         ) : (
-          <>log in to do stuff</>
+          <div>
+            {[
+              "Owls don't have eyeballs",
+              'A tiger’s roar can be heard up to two miles away',
+              'Pineapples take two years to grow',
+              'Niagara Falls never freezes',
+              'You need to be logged in to do stuff',
+            ].map((s, i) => {
+              return (
+                <div key={i} className="pt-5">
+                  {s}
+                </div>
+              )
+            })}
+          </div>
         )}
       </div>
     </div>

@@ -1,11 +1,18 @@
-import { ChangeEvent, Fragment, useEffect, useState } from 'react'
+import { BASE_URI } from '@/constants'
+import { Item, Locus } from '@/pages/api/lib/data/models/_loci'
+import { post } from '@/util'
+import { useAuth0 } from '@auth0/auth0-react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/outline'
+import { ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { useRouter } from 'next/router'
+import { ChangeEvent, Fragment, useState } from 'react'
+import { inputStyle } from './StyleProviders'
 
-interface Item {
+interface AddItemData {
   name: string
-  count: number
+  count: number | ''
   description: string
+  descriptionOpen: boolean
 }
 
 type Props = {
@@ -13,35 +20,59 @@ type Props = {
   onClose: () => void
 }
 
-const newItem = (): Item => {
-  return { name: '', count: 1, description: '' }
+const newItem = (): AddItemData => {
+  return { name: '', count: 1, description: '', descriptionOpen: false }
 }
 
 export default function AddItemModal(props: Props) {
+  const { getIdTokenClaims } = useAuth0()
+  const router = useRouter()
   const [locus, setLocus] = useState<string>('')
-  const [items, setItems] = useState<Array<Item>>([newItem()])
+  const [items, setItems] = useState<Array<AddItemData>>([newItem()])
 
-  const handleEditLocusName = (name: string) => setLocus(name)
-  const handleEditItemName = (i: number, value: string) =>
-    handleEditItem(i, 'name', value)
-  const handleEditItemDescription = (i: number, description: string) =>
-    handleEditItem(i, 'name', description)
-  const handleEditItemCount = (i: number, count: string) =>
-    handleEditItem(i, 'name', count)
-  const handleEditItem = (i: number, property: keyof Item, value: string) => {
+  const handleEditItem = (i: number, property: keyof AddItemData, value: string) => {
     const oldItem = items[i]
+
+    const newCount: number | '' = value == '' || isNaN(value as unknown as number) ? '' : parseInt(value)
+
     const newItem =
       property == 'count'
-        ? { ...oldItem, count: parseInt(value) }
+        ? { ...oldItem, count: newCount }
         : property == 'description'
         ? { ...oldItem, description: value }
         : { ...oldItem, name: value }
+
     setItems([...items.slice(0, i), newItem, ...items.slice(i + 1)])
   }
 
   const handleAddItem = () => setItems([...items, newItem()])
-  const handleDeleteItem = (i: number) =>
-    setItems([...items.slice(0, i), ...items.slice(i + 1)])
+
+  const handleDeleteItem = (i: number) => setItems([...items.slice(0, i), ...items.slice(i + 1)])
+
+  const handleDescriptionOpenChanged = (i: number) => {
+    const oldItem = items[i]
+    setItems([...items.slice(0, i), { ...oldItem, descriptionOpen: !oldItem.descriptionOpen }, ...items.slice(i + 1)])
+  }
+
+  const handleSave = async () => {
+    const loci: Array<Item> = items
+      .filter((i) => i.name)
+      .map((i) => {
+        return {
+          name: i.name,
+          locations: [{ count: i.count == '' ? 1 : i.count, locus } as Locus],
+          description: i.description,
+        }
+      })
+
+    const path = `${[router.query.user, router.query.loci]
+      //@ts-ignore
+      .map(encodeURIComponent)
+      .join('/')}`
+    await post<Array<Item>, any>(`${BASE_URI}/api/${path}/root`, loci, getIdTokenClaims)
+    props.onClose()
+  }
+  console.log(inputStyle('1/2'))
 
   return (
     <Transition.Root show={props.open} as={Fragment}>
@@ -55,7 +86,7 @@ export default function AddItemModal(props: Props) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-neutral-900 bg-opacity-75 backdrop-blur-md transition-opacity" />
         </Transition.Child>
 
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -71,10 +102,7 @@ export default function AddItemModal(props: Props) {
             >
               <Dialog.Panel className="relative bg-black rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-sm sm:w-full sm:p-6">
                 <div>
-                  <label
-                    htmlFor="locus"
-                    className="block text-sm font-medium text-white"
-                  >
+                  <label htmlFor="locus" className="block text-sm font-medium text-white">
                     Locus
                   </label>
                   <div className="mt-1">
@@ -82,10 +110,8 @@ export default function AddItemModal(props: Props) {
                       type="text"
                       name="locus"
                       id="locus"
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleEditLocusName(event.target.value)
-                      }
-                      className="w-full shadow-sm sm:text-sm rounded-md bg-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 block border-neutral-600"
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => setLocus(event.target.value)}
+                      className={inputStyle()}
                       placeholder="Where?"
                     />
                   </div>
@@ -94,12 +120,9 @@ export default function AddItemModal(props: Props) {
                   {items.map((item, i) => {
                     return (
                       <div key={i}>
-                        <div className="flex flex-row gap-3 pt-5">
+                        <div className="flex flex-row gap-3 pt-3">
                           <div>
-                            <label
-                              htmlFor={`item-${i}`}
-                              className="block text-sm font-medium text-white"
-                            >
+                            <label htmlFor={`item-${i}`} className="block text-sm font-medium text-white">
                               Name
                             </label>
                             <div>
@@ -108,19 +131,16 @@ export default function AddItemModal(props: Props) {
                                 name={`item-${i}`}
                                 id={`item-${i}`}
                                 value={item.name}
-                                onChange={(
-                                  event: ChangeEvent<HTMLInputElement>
-                                ) => handleEditItemName(i, event.target.value)}
-                                className="w-full shadow-sm sm:text-sm rounded-md bg-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 block border-neutral-600"
+                                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                                  handleEditItem(i, 'name', event.target.value)
+                                }
+                                className={inputStyle(' w-56')}
                                 placeholder="What?"
                               />
                             </div>
                           </div>
                           <div>
-                            <label
-                              htmlFor={`item-count-${i}`}
-                              className="block text-sm font-medium text-white"
-                            >
+                            <label htmlFor={`item-count-${i}`} className="block text-sm font-medium text-white">
                               Count
                             </label>
                             <div>
@@ -129,22 +149,58 @@ export default function AddItemModal(props: Props) {
                                 name={`item-count-${i}`}
                                 id={`item-count-${i}`}
                                 value={item.count}
-                                onChange={(
-                                  event: ChangeEvent<HTMLInputElement>
-                                ) => handleEditItemCount(i, event.target.value)}
-                                className="w-16 shadow-sm sm:text-sm rounded-md bg-neutral-900 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500 block border-neutral-600"
-                                placeholder="How many?"
+                                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                                  handleEditItem(i, 'count', event.target.value)
+                                }
+                                className={inputStyle()}
                               />
                             </div>
                           </div>
                           <div className="mt-5 sm:mt-6">
                             <button
                               type="button"
-                              className="inline-flex justify-center w-8 rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                              className="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-neutral-600 hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500"
                               onClick={() => handleDeleteItem(i)}
                             >
-                              X
+                              <XMarkIcon className="h-5 w-5" />
                             </button>
+                          </div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="relative"></div>
+                          {items[i].descriptionOpen && (
+                            <div>
+                              <label htmlFor={`item-description-${i}`} className="block text-sm font-medium text-white">
+                                Description
+                              </label>
+                              <div>
+                                <input
+                                  type="text"
+                                  name={`item-description-${i}`}
+                                  id={`item-description-${i}`}
+                                  value={item.description}
+                                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                                    handleEditItem(i, 'description', event.target.value)
+                                  }
+                                  className={inputStyle()}
+                                  placeholder="What?!?"
+                                />
+                              </div>
+                            </div>
+                          )}
+                          <div className="relative my-3" onClick={() => handleDescriptionOpenChanged(i)}>
+                            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                              <div className="w-full border-t border-neutral-500" />
+                            </div>
+                            <div className="relative flex justify-center">
+                              <span className="bg-black px-2 text-neutal-700">
+                                {items[i].descriptionOpen ? (
+                                  <ChevronUpIcon className="mx-auto h-6 w-6" />
+                                ) : (
+                                  <ChevronDownIcon className="mx-auto h-6 w-6" />
+                                )}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -154,7 +210,7 @@ export default function AddItemModal(props: Props) {
                 <div className="mt-5 sm:mt-6">
                   <button
                     type="button"
-                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
+                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-neutral-600 text-base font-medium text-white hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-500 sm:text-sm"
                     onClick={handleAddItem}
                   >
                     Add Item
@@ -163,8 +219,8 @@ export default function AddItemModal(props: Props) {
                 <div className="mt-5 sm:mt-6">
                   <button
                     type="button"
-                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm"
-                    onClick={props.onClose}
+                    className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
+                    onClick={handleSave}
                   >
                     Save
                   </button>
