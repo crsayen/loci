@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Collection {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  ownerId   String   @db.VarChar(255)
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  items     Item[]
+}
+
+model Item {
+  id           Int        @id @default(autoincrement())
+  name         String     @db.VarChar(255)
+  createdAt    DateTime   @default(now()) @db.Timestamp(6)
+  collectionId Int
+  locus        String     @db.VarChar(255)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  loci         Locus[]
+}
+
+model Permission {
+  id              Int              @id @default(autoincrement())
+  authority       String           @db.VarChar(255)
+  description     String?          @db.VarChar(255)
+  rolePermissions RolePermission[]
+}
+
+model Role {
+  id              Int              @id @default(autoincrement())
+  name            String           @db.VarChar(255)
+  description     String?          @db.VarChar(255)
+  rolePermissions RolePermission[]
+  UserRole        UserRole[]
+}
+
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([roleId, permissionId], map: "role_permission_pkey")
+}
+
+model User {
+  id          String       @id @db.VarChar(255)
+  name        String       @db.VarChar(255)
+  collections Collection[]
+  userRoles   UserRole[]
+}
+
+model UserRole {
+  userId String @db.VarChar(255)
+  roleId Int
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user   User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([userId, roleId], map: "user_role_pkey")
+}
+
+model Locus {
+  id     Int    @id @default(autoincrement())
+  name   String @db.VarChar(255)
+  amount Int
+  itemId Int
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
